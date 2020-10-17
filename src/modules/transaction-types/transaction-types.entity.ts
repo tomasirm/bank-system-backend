@@ -1,5 +1,5 @@
 import { Column, Entity } from 'typeorm';
-import { GenericEntity } from '../shared/generic.entity';
+import { GenericEntity } from '../../common/generic.entity';
 
 @Entity({name: 'transaction_types'})
 export class TransactionEntity extends GenericEntity{

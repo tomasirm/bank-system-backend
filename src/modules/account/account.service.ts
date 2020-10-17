@@ -5,7 +5,7 @@ import { AccountEntity } from './account.entity';
 import { CustomerService } from '../customer/customer.service';
 import { CustomerEntity } from '../customer/customer.entity';
 import { AccountDto } from './account.dto';
-import { CustomerDto } from '../customer/infraestructure/customer.dto';
+import { CustomerDto } from '../customer/customer.dto';
 
 @Injectable()
 export class AccountService {

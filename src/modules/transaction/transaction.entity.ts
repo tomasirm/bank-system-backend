@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { AccountEntity } from '../account/account.entity';
 import { TransactionTypesEntity } from './transaction-types.entity';
-import { GenericEntity } from '../shared/generic.entity';
+import { GenericEntity } from '../../common/generic.entity';
 
 @Entity({name: 'transaction'})
 export class TransactionEntity extends GenericEntity{

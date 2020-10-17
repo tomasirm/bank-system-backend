@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { GenericEntity } from '../shared/generic.entity';
+import { GenericEntity } from '../../common/generic.entity';
 import { TransactionEntity } from './transaction.entity';
 
 @Entity({name: 'transaction_types'})

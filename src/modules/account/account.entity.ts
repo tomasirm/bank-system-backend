@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany } from 'typeorm';
-import { GenericEntity } from '../shared/generic.entity';
+import { GenericEntity } from '../../common/generic.entity';
 import { TransactionEntity } from '../transaction/transaction.entity';
 
 @Entity({name: 'account'})

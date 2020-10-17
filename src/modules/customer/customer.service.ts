@@ -2,17 +2,18 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CustomerEntity } from './customer.entity';
 import { Repository } from 'typeorm';
-import { CustomerDto } from './infraestructure/customer.dto';
+import { CustomerDto } from './customer.dto';
 import { AccountDto } from '../account/account.dto';
 
 @Injectable()
 export class CustomerService {
   constructor(@InjectRepository(CustomerEntity) private readonly customerEntityRepository: Repository<CustomerEntity>) { }
 
-  public async saveCustomer(customerEntity: CustomerEntity, customerDto: CustomerDto): Promise<CustomerDto> {
+  public async saveCustomer(customerDto: CustomerDto): Promise<CustomerDto> {
     console.log(customerDto)
-    const customerFind : CustomerDto = await this.getCustomer(customerDto.dni);
-    if(customerFind && customerFind.id) {
+    //const customerFind : CustomerDto = await this.getCustomer(customerDto.dni);
+    const customer = await this.customerEntityRepository.findOne({dni: customerDto.dni}, { relations: ['accountEntity'] });
+    if(customer && customer.id) {
       throw new HttpException('Customer already exists', HttpStatus.CONFLICT);
     }
     return this.customerEntityRepository.save(CustomerDto.from(customerDto).toEntity())
@@ -22,6 +23,7 @@ export class CustomerService {
   public async getCustomer(dni: string): Promise<CustomerDto> {
 
     const customer = await this.customerEntityRepository.findOne({dni: dni}, { relations: ['accountEntity'] });
+    /** todo: hay que mejorar este error, desacoplarlo**/
     if(!customer){
       throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
     }

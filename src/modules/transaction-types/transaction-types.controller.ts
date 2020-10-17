@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CustomerService } from '../customer/customer.service';
 import { CustomerEntity } from '../customer/customer.entity';
-import { CustomerDto } from '../customer/infraestructure/customer.dto';
+import { CustomerDto } from '../customer/customer.dto';
 
 @Controller('transaction-types')
 export class CustomerController {
@@ -11,7 +11,8 @@ export class CustomerController {
 
   @Post('')
   async saveCustomer(customerEntity: CustomerEntity, @Body() customerDto: CustomerDto): Promise<CustomerDto> {
-    return await this.customerService.saveCustomer(customerEntity, customerDto);
+    //return await this.customerService.saveCustomer(customerEntity, customerDto);
+    return null;
   }
 
 
