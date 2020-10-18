@@ -19,7 +19,7 @@ export class CustomerService {
   }
 
   public async getAllCustomers(): Promise<CustomerDto[]> {
-    return await this.customerEntityRepository.find({ relations: ['accountEntity'] })
+    return await this.customerEntityRepository.find()
       .then(customers => customers.map(customer => CustomerDto.fromEntity(customer)));
   }
 
@@ -29,7 +29,7 @@ export class CustomerService {
   }
 
   public async findCustomerByDni(dni: string): Promise<CustomerEntity>{
-    return await this.customerEntityRepository.findOne({ dni: dni }, { relations: ['accountEntity'] });
+    return await this.customerEntityRepository.findOne({ dni: dni });
   }
 
   public async getCustomerByDni(dni: string): Promise<CustomerDto>{

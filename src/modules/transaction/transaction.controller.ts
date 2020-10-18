@@ -10,7 +10,7 @@ export class TransactionController {
 
   @Post('')
   async saveTransaction(@Body() transactionDto: TransactionDto): Promise<TransactionDto> {
-    return await this.transactionService.saveTransaction(transactionDto);
+    return await this.transactionService.accountTransaction(transactionDto);
   }
 
 }

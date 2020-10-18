@@ -1,5 +1,5 @@
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
-import { IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsString } from 'class-validator';
 import { TransactionEntity } from './transaction.entity';
 import { CustomerDto } from '../customer/customer.dto';
 
@@ -25,6 +25,9 @@ export class TransactionDto implements Readonly<TransactionDto>{
   @IsString()
   transactionType: string;
 
+  @ApiModelProperty({ required: true })
+  @IsString()
+  dniDestiny: string;
 
   public static from(dto: Partial<TransactionDto>) {
     const it = new TransactionDto();
