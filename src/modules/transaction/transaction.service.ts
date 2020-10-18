@@ -30,12 +30,12 @@ export class TransactionService {
     const customer = await this.customerService.findCustomerByDni(dni);
     const transactionType = await this.transactionTypesService.findTransactionType(transactionTypeStr);
     const transaction = new TransactionEntity();
-    if (balanceType === 'WITHDRAW') {
+    if (balanceType === 'DEPOSIT') {
       if ((customer.balance - amount) < 0) {
         throw new HttpException('Client doesnt have enough funds', HttpStatus.CONFLICT);
       }
       customer.balance -= amount;
-    } else {
+    } else if(balanceType === 'WITHDRAW'){
       customer.balance += amount;
     }
     transaction.customerEntity = customer;
