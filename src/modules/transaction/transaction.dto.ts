@@ -1,7 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 import { IsNumber, IsString } from 'class-validator';
-import { AccountDto } from '../account/account.dto';
 import { TransactionEntity } from './transaction.entity';
+import { CustomerDto } from '../customer/customer.dto';
 
 export class TransactionDto implements Readonly<TransactionDto>{
   @ApiModelProperty({ required: true })
@@ -10,7 +10,7 @@ export class TransactionDto implements Readonly<TransactionDto>{
 
   @ApiModelProperty({ required: true })
   @IsString()
-  accountDto: AccountDto;
+  customerDto: CustomerDto;
 
   @ApiModelProperty({ required: true })
   @IsString()
@@ -21,17 +21,21 @@ export class TransactionDto implements Readonly<TransactionDto>{
   updateAt: Date;
 
 
+  @ApiModelProperty({ required: true })
+  @IsString()
+  transactionType: string;
+
+
   public static from(dto: Partial<TransactionDto>) {
     const it = new TransactionDto();
     it.amount = dto.amount;
-    it.accountDto = dto.accountDto;
+    it.customerDto = dto.customerDto;
     return it;
   }
 
-  public static fromEntity(entity: TransactionDto) {
+  public static fromEntity(entity: TransactionEntity) {
     return this.from({
       amount: entity.amount,
-      accountDto: entity.accountDto,
     });
   }
 

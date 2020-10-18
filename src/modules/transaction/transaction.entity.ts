@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
-import { AccountEntity } from '../account/account.entity';
-import { TransactionTypesEntity } from './transaction-types.entity';
 import { GenericEntity } from '../../common/generic.entity';
+import { CustomerEntity } from '../customer/customer.entity';
+import { TransactionTypesEntity } from '../transaction-types/transaction-types.entity';
 
 @Entity({name: 'transaction'})
 export class TransactionEntity extends GenericEntity{
@@ -9,11 +9,13 @@ export class TransactionEntity extends GenericEntity{
   @Column({ type: 'int', nullable: false })
   amount: number;
 
-  @ManyToOne(type => AccountEntity, account => account.transactions)
+  @ManyToOne(type => CustomerEntity, customer => customer.transactions)
   @JoinColumn()
-  accountEntity: AccountEntity;
+  customerEntity: CustomerEntity;
 
   @ManyToOne(type => TransactionTypesEntity, transactionType => transactionType.transactions)
   @JoinColumn()
   transactionTypeEntity: TransactionTypesEntity;
+
+
 }

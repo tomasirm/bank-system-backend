@@ -1,6 +1,6 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import { GenericEntity } from '../../common/generic.entity';
-import { AccountEntity } from '../account/account.entity';
+import { TransactionEntity } from '../transaction/transaction.entity';
 
 @Entity({name: 'customer'})
 export class CustomerEntity extends GenericEntity{
@@ -14,7 +14,8 @@ export class CustomerEntity extends GenericEntity{
   email: string;
   @Column({ type: 'varchar', length: 50, nullable: true })
   password: string;
-  @OneToOne(type => AccountEntity)
-  @JoinColumn()
-  accountEntity: Promise<AccountEntity>;
+  @Column({ type: 'int',  default:0 })
+  balance: number;
+  @OneToMany(type => TransactionEntity, transaction => transaction.customerEntity) // note: we will create author property in the Photo class below
+  transactions: TransactionEntity[];
 }

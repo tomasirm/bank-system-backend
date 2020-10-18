@@ -1,20 +1,17 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { CustomerService } from '../customer/customer.service';
-import { CustomerEntity } from '../customer/customer.entity';
-import { CustomerDto } from '../customer/customer.dto';
+import { TransactionTypesService } from './transaction-types.service';
+
 
 @Controller('transaction-types')
-export class CustomerController {
+export class TransactionTypesController {
 
-  constructor(private readonly customerService: CustomerService) {
+  constructor(private transactionTypesService: TransactionTypesService) {
   }
 
-  @Post('')
-  async saveCustomer(customerEntity: CustomerEntity, @Body() customerDto: CustomerDto): Promise<CustomerDto> {
-    //return await this.customerService.saveCustomer(customerEntity, customerDto);
-    return null;
+  @Get('populate')
+  async saveTransaction(): Promise<any> {
+    return await this.transactionTypesService.populate();
   }
-
 
 }
 

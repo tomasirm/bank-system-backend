@@ -1,8 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 import { IsNumber, IsString } from 'class-validator';
 import { CustomerEntity } from './customer.entity';
-import { AccountDto } from '../account/account.dto';
-import { Exclude } from 'class-transformer';
 
 export class CustomerDto implements Readonly<CustomerDto>{
   @ApiModelProperty({ required: true })
@@ -39,7 +37,8 @@ export class CustomerDto implements Readonly<CustomerDto>{
   password: string;
 
   @ApiModelProperty({ required: true })
-  account: AccountDto;
+  @IsNumber()
+  balance: number;
 
   public static from(dto: Partial<CustomerDto>) {
     const it = new CustomerDto();
@@ -50,8 +49,8 @@ export class CustomerDto implements Readonly<CustomerDto>{
     it.createdAt = dto.createdAt;
     it.updateAt = dto.updateAt;
     it.email = dto.email;
-    it.account = dto.account;
     it.password = dto.password;
+    it.balance = dto.balance;
     return it;
   }
 
@@ -59,7 +58,6 @@ export class CustomerDto implements Readonly<CustomerDto>{
     if(!entity) {
       return;
     }
-    console.log(entity)
     return this.from({
       dni: entity.dni,
       names: entity.names,
@@ -68,6 +66,7 @@ export class CustomerDto implements Readonly<CustomerDto>{
       createdAt: entity.createdAt,
       updateAt: entity.updateAt,
       email: entity.email,
+      balance: entity.balance
     });
   }
 
@@ -81,6 +80,7 @@ export class CustomerDto implements Readonly<CustomerDto>{
     it.updateAt = this.updateAt;
     it.password = this.password;
     it.email = this.email;
+    it.balance = this.balance;
     return it;
   }
 }

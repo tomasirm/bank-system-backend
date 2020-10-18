@@ -1,42 +1,48 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CustomerEntity } from './customer.entity';
-import { Repository } from 'typeorm';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CustomerDto } from './customer.dto';
-import { AccountDto } from '../account/account.dto';
+import { CustomerEntity } from './customer.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CustomerService {
-  constructor(@InjectRepository(CustomerEntity) private readonly customerEntityRepository: Repository<CustomerEntity>) { }
-
-  public async saveCustomer(customerDto: CustomerDto): Promise<CustomerDto> {
-    console.log(customerDto)
-    //const customerFind : CustomerDto = await this.getCustomer(customerDto.dni);
-    const customer = await this.customerEntityRepository.findOne({dni: customerDto.dni}, { relations: ['accountEntity'] });
-    if(customer && customer.id) {
-      throw new HttpException('Customer already exists', HttpStatus.CONFLICT);
-    }
-    return this.customerEntityRepository.save(CustomerDto.from(customerDto).toEntity())
-      .then(e => CustomerDto.fromEntity(e));
+  constructor( @InjectRepository(CustomerEntity) private readonly customerEntityRepository: Repository<CustomerEntity>) {
   }
 
-  public async getCustomer(dni: string): Promise<CustomerDto> {
-
-    const customer = await this.customerEntityRepository.findOne({dni: dni}, { relations: ['accountEntity'] });
-    /** todo: hay que mejorar este error, desacoplarlo**/
-    if(!customer){
-      throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
+  public async saveCustomer(customerDto: CustomerDto): Promise<CustomerDto> {
+    let customer = await this.findCustomerByDni(customerDto.dni);
+    if (customer && customer.id) {
+      throw new HttpException('Customer already exists', HttpStatus.CONFLICT);
     }
-    const customerDto: CustomerDto =  CustomerDto.fromEntity(customer)
-    if(customer.accountEntity){
-     customerDto.account = AccountDto.fromEntity(await customer.accountEntity);
-    }
-    return customerDto;
+    customer = await this.customerEntityRepository.save(CustomerDto.from(customerDto).toEntity());
+    return CustomerDto.fromEntity(customer);
   }
 
   public async getAllCustomers(): Promise<CustomerDto[]> {
     return await this.customerEntityRepository.find({ relations: ['accountEntity'] })
-      .then(customers => customers.map(customer =>  CustomerDto.fromEntity(customer)));
+      .then(customers => customers.map(customer => CustomerDto.fromEntity(customer)));
+  }
+
+
+  public async findCustomerByEmailAndPass(email: string, password: string){
+    return  await this.customerEntityRepository.findOne({email: email, password: password});
+  }
+
+  public async findCustomerByDni(dni: string): Promise<CustomerEntity>{
+    return await this.customerEntityRepository.findOne({ dni: dni }, { relations: ['accountEntity'] });
+  }
+
+  public async getCustomerByDni(dni: string): Promise<CustomerDto>{
+    const customer = await this.findCustomerByDni(dni);
+    if (customer && customer.id) {
+      throw new HttpException('Customer not found', HttpStatus.CONFLICT);
+    }
+    return CustomerDto.from(customer);
+  }
+
+  public async getCustomerByEmailAndPass(email: string, password: string){
+    const customer = await this.findCustomerByEmailAndPass(email, password);
+    return CustomerDto.from(customer);
   }
 
 
