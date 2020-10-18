@@ -16,6 +16,6 @@ export class CustomerEntity extends GenericEntity{
   password: string;
   @Column({ type: 'int',  default:0 })
   balance: number;
-  @OneToMany(type => TransactionEntity, transaction => transaction.customerEntity) // note: we will create author property in the Photo class below
+  @OneToMany(type => TransactionEntity, transaction => transaction.customer) // note: we will create author property in the Photo class below
   transactions: TransactionEntity[];
 }

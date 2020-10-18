@@ -23,6 +23,12 @@ export class CustomerController {
   async getAllCustomer(): Promise<CustomerDto[]> {
     return await this.customerService.getAllCustomers();
   }
+  @Get('balance/:dni')
+  async getBalance(@Param('dni') dni: string): Promise<number> {
+    console.log(dni);
+    return await this.customerService.getBalance(dni);
+  }
+
 
 }
 

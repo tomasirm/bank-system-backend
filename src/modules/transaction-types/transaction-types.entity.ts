@@ -11,7 +11,7 @@ export class TransactionTypesEntity extends GenericEntity{
   @Column({ type: 'varchar', nullable: false, length: 100})
   description: string;
 
-  @OneToMany(type => TransactionEntity, transaction => transaction.transactionTypeEntity) // note: we will create author property in the Photo class below
+  @OneToMany(type => TransactionEntity, transaction => transaction.transactionType) // note: we will create author property in the Photo class below
   transactions: TransactionEntity[];
 
 }

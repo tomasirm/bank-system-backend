@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToOne } from 'typeorm';
 import { GenericEntity } from '../../common/generic.entity';
 import { CustomerEntity } from '../customer/customer.entity';
 import { TransactionTypesEntity } from '../transaction-types/transaction-types.entity';
@@ -9,13 +9,17 @@ export class TransactionEntity extends GenericEntity{
   @Column({ type: 'int', nullable: false })
   amount: number;
 
-  @ManyToOne(type => CustomerEntity, customer => customer.transactions)
+  @ManyToOne(type => CustomerEntity, customer => customer.transactions, { eager: true})
   @JoinColumn()
-  customerEntity: CustomerEntity;
+  customer: CustomerEntity;
 
-  @ManyToOne(type => TransactionTypesEntity, transactionType => transactionType.transactions)
+  @ManyToOne(type => TransactionTypesEntity, transactionType => transactionType.transactions, { eager: true})
   @JoinColumn()
-  transactionTypeEntity: TransactionTypesEntity;
+  transactionType: TransactionTypesEntity;
 
+  @Column({ type: 'int', nullable: true })
+  historicalBalance: number;
 
+  @Column({ type: 'varchar', length: 50, nullable: false })
+  description: string;
 }

@@ -2,12 +2,13 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CustomerDto } from './customer.dto';
 import { CustomerEntity } from './customer.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Transaction } from 'typeorm';
 
 @Injectable()
 export class CustomerService {
   constructor( @InjectRepository(CustomerEntity) private readonly customerEntityRepository: Repository<CustomerEntity>) {
   }
+
 
   public async saveCustomer(customerDto: CustomerDto): Promise<CustomerDto> {
     let customer = await this.findCustomerByDni(customerDto.dni);
@@ -40,9 +41,20 @@ export class CustomerService {
     return CustomerDto.from(customer);
   }
 
-  public async getCustomerByEmailAndPass(email: string, password: string){
+  public async getCustomerByEmailAndPass(email: string, password: string): Promise<CustomerDto>{
     const customer = await this.findCustomerByEmailAndPass(email, password);
+    if (!customer || !customer.id) {
+      throw new HttpException('These credentials do not match our records', HttpStatus.NOT_FOUND);
+    }
     return CustomerDto.from(customer);
+  }
+
+  public async getBalance(dni: string){
+    const customer = await this.findCustomerByDni(dni);
+    if (!customer || !customer.id) {
+      throw new HttpException('Customer not found', HttpStatus.CONFLICT);
+    }
+    return customer.balance;
   }
 
 

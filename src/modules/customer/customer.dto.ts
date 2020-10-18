@@ -1,6 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 import { IsNumber, IsString } from 'class-validator';
 import { CustomerEntity } from './customer.entity';
+import { Exclude } from 'class-transformer';
 
 export class CustomerDto implements Readonly<CustomerDto>{
   @ApiModelProperty({ required: true })
@@ -34,6 +35,7 @@ export class CustomerDto implements Readonly<CustomerDto>{
 
   @ApiModelProperty({ required: true })
   @IsString()
+  @Exclude()
   password: string;
 
   @ApiModelProperty({ required: true })
@@ -49,8 +51,8 @@ export class CustomerDto implements Readonly<CustomerDto>{
     it.createdAt = dto.createdAt;
     it.updateAt = dto.updateAt;
     it.email = dto.email;
-    it.password = dto.password;
     it.balance = dto.balance;
+    it.password = dto.password
     return it;
   }
 
