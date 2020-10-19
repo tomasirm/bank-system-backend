@@ -29,7 +29,7 @@ export class TransactionTypesDto implements Readonly<TransactionTypesDto>{
     return it;
   }
 
-  public static fromEntity(entity: TransactionTypesDto) {
+  public static fromEntity(entity: TransactionTypesEntity) {
     return this.from({
       name: entity.name,
       description: entity.description,

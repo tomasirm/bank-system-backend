@@ -13,5 +13,10 @@ export class TransactionTypesController {
     return await this.transactionTypesService.populate();
   }
 
+  @Get('')
+  async getAllTransactionTypes(): Promise<any> {
+    return await this.transactionTypesService.getAllTransactions();
+  }
+
 }
 

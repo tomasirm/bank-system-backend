@@ -61,7 +61,7 @@ export class CustomerService {
     }
     const payload = { username: customer.email };
     return {
-      customerDto: customer,
+      customerDto: CustomerDto.fromEntity(customer),
       access_token: this.authService.generateJWT(payload),
     };
 

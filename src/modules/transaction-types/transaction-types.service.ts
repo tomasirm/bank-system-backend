@@ -2,6 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TransactionTypesEntity } from './transaction-types.entity';
+import { CustomerDto } from '../customer/customer.dto';
+import { TransactionTypesDto } from './transaction-types.dto';
 
 @Injectable()
 export class TransactionTypesService {
@@ -50,5 +52,10 @@ export class TransactionTypesService {
     await typeFour.save();
 
     return { message: 'Tipos de transferencias guardadas con exito' };
+  }
+
+  public async getAllTransactions(){
+    return await this.transactionTypesEntityRepository.find()
+      .then(transactionTypes => transactionTypes.map(transactionType => TransactionTypesDto.fromEntity(transactionType)));
   }
 }

@@ -36,6 +36,7 @@ export class TransactionDto implements Readonly<TransactionDto> {
 
   @ApiModelProperty({ required: true })
   @IsString()
+  @IsOptional()
   dniDestiny: string;
 
   @ApiModelProperty({ required: true })
