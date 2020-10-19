@@ -26,7 +26,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           password: config.get('DATABASE_PASS'),
           database:config.get('DATABASE_DATABASE'),
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          /*synchronize: true,
+          synchronize: true,/*
           dropSchema: false*/
         } as TypeOrmModuleOptions;
       },
