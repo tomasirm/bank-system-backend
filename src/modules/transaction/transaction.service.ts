@@ -15,14 +15,18 @@ export class TransactionService {
               private readonly transactionTypesService: TransactionTypesService) {
   }
 
+
   public async accountTransaction(transactionDto: TransactionDto): Promise<any>{
     if (transactionDto.transactionType == 'CARGA_SALDO') {
       await this.saveTransaction(transactionDto.customerDto.dni, transactionDto.transactionType, transactionDto.amount, 'DEPOSIT');
     } else if (transactionDto.transactionType == 'RETIRO_SALDO') {
       await this.saveTransaction(transactionDto.customerDto.dni, transactionDto.transactionType, transactionDto.amount, 'WITHDRAW');
     } else if (transactionDto.transactionType == 'TRANSFERENCIA_A_TERCEROS') {
-      await this.saveTransaction(transactionDto.customerDto.dni, transactionDto.transactionType, transactionDto.amount, 'WITHDRAW', transactionDto.dniDestiny);
+      if(transactionDto.customerDto.dni == transactionDto.dniDestiny){
+        throw new HttpException('No puedes transferirte a ti mismo, para eso debes hacer una carga de saldo.', HttpStatus.CONFLICT);
+      }
       await this.saveTransaction(transactionDto.dniDestiny, 'TRANSFERENCIA_DE_TERCEROS', transactionDto.amount, 'DEPOSIT', transactionDto.customerDto.dni);
+      await this.saveTransaction(transactionDto.customerDto.dni, transactionDto.transactionType, transactionDto.amount, 'WITHDRAW', transactionDto.dniDestiny);
     }else{
       throw new HttpException('Tipo de transacción no encontrada', HttpStatus.NOT_FOUND);
     }

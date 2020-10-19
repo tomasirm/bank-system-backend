@@ -20,13 +20,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       useFactory: (config: ConfigService) => {
         return {
           type: 'postgres',
-          port: 5432,
+          port: config.get('DATABASE_PORT'),
           url: config.get('DATABASE_URL'),
           username: config.get('DATABASE_USER'),
           password: config.get('DATABASE_PASS'),
           database:config.get('DATABASE_DATABASE'),
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          synchronize: true,
+          /*synchronize: true,
+          dropSchema: false*/
         } as TypeOrmModuleOptions;
       },
     }),
