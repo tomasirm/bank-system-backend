@@ -25,6 +25,10 @@ export class TransactionService {
       if(transactionDto.customerDto.dni == transactionDto.dniDestiny){
         throw new HttpException('No puedes transferirte a ti mismo, para eso debes hacer una carga de saldo.', HttpStatus.CONFLICT);
       }
+      const customer = await this.customerService.findCustomerByDni(transactionDto.customerDto.dni);
+      if(customer.balance - transactionDto.amount < 0){
+        throw new HttpException('Client no tiene saldo suficiente', HttpStatus.CONFLICT);
+      }
       await this.saveTransaction(transactionDto.dniDestiny, 'TRANSFERENCIA_DE_TERCEROS', transactionDto.amount, 'DEPOSIT', transactionDto.customerDto.dni);
       await this.saveTransaction(transactionDto.customerDto.dni, transactionDto.transactionType, transactionDto.amount, 'WITHDRAW', transactionDto.dniDestiny);
     }else{
@@ -33,6 +37,7 @@ export class TransactionService {
     return { message: 'Transacción exitosa' };
 
   }
+
 
   public async saveTransaction(dni: string, transactionTypeStr: string, amount: number, balanceType: string, otherDni?: string): Promise<any> {
     const customer = await this.customerService.findCustomerByDni(dni);
