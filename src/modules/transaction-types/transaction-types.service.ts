@@ -34,21 +34,25 @@ export class TransactionTypesService {
     const typeOne = new TransactionTypesEntity();
     typeOne.name = 'CARGA_SALDO';
     typeOne.description = 'Tipo de transaccion que simula una carga de saldo a la cuenta';
+    typeOne.label = 'Carga de saldo';
     await typeOne.save();
 
     const typeTwo = new TransactionTypesEntity();
     typeTwo.name = 'RETIRO_SALDO';
     typeTwo.description = 'Tipo de transaccion que simula un retiro de saldo a la cuenta';
+    typeTwo.label = 'Retiro de saldo';
     await typeTwo.save();
 
     const typeThree = new TransactionTypesEntity();
     typeThree.name = 'TRANSFERENCIA_A_TERCEROS';
     typeThree.description = 'Tipo de transaccion que simula una transferencia a terceros';
+    typeThree.label = 'Transferencia a terceros';
     await typeThree.save();
 
     const typeFour = new TransactionTypesEntity();
     typeFour.name = 'TRANSFERENCIA_DE_TERCEROS';
     typeFour.description = 'Tipo de transaccion que simula una transferencia de terceros';
+    typeFour.label = 'Transferencia de terceros';
     await typeFour.save();
 
     return { message: 'Tipos de transferencias guardadas con exito' };

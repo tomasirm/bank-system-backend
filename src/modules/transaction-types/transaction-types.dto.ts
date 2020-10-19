@@ -8,6 +8,10 @@ export class TransactionTypesDto implements Readonly<TransactionTypesDto>{
   name: string;
 
   @ApiModelProperty({ required: true })
+  @IsNumber()
+  label: string;
+
+  @ApiModelProperty({ required: true })
   @IsString()
   description: string;
 
@@ -26,6 +30,7 @@ export class TransactionTypesDto implements Readonly<TransactionTypesDto>{
     it.description = dto.description;
     it.updateAt = dto.updateAt;
     it.createdAt = dto.createdAt;
+    it.label = dto.label;
     return it;
   }
 
@@ -35,6 +40,7 @@ export class TransactionTypesDto implements Readonly<TransactionTypesDto>{
       description: entity.description,
       updateAt: entity.updateAt,
       createdAt: entity.createdAt,
+      label: entity.label,
     });
   }
 
@@ -44,6 +50,7 @@ export class TransactionTypesDto implements Readonly<TransactionTypesDto>{
     it.description = this.description;
     it.createdAt = this.createdAt;
     it.updateAt = this.updateAt;
+    it.label = this.label;
     return it;
   }
 }

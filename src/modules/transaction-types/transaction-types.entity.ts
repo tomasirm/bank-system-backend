@@ -8,6 +8,9 @@ export class TransactionTypesEntity extends GenericEntity{
   @Column({ type: 'varchar', nullable: false, length: 50})
   name: string;
 
+  @Column({ type: 'varchar', nullable: true, length: 50})
+  label: string;
+
   @Column({ type: 'varchar', nullable: false, length: 100})
   description: string;
 

@@ -16,7 +16,7 @@ export class CustomerService {
   public async saveCustomer(customerDto: CustomerDto): Promise<CustomerDto> {
     let customer = await this.findCustomerByDni(customerDto.dni);
     if (customer && customer.id) {
-      throw new HttpException('Customer already exists', HttpStatus.CONFLICT);
+      throw new HttpException('Cliente ya existe', HttpStatus.CONFLICT);
     }
     customer = new CustomerEntity();
 
@@ -37,7 +37,7 @@ export class CustomerService {
   public async getCustomerByDni(dni: string): Promise<CustomerDto>{
     const customer = await this.findCustomerByDni(dni);
     if (customer && customer.id) {
-      throw new HttpException('Customer not found', HttpStatus.CONFLICT);
+      throw new HttpException('Cliente no encontrado', HttpStatus.CONFLICT);
     }
     return CustomerDto.from(customer);
   }
@@ -45,7 +45,7 @@ export class CustomerService {
   public async getBalance(dni: string){
     const customer = await this.findCustomerByDni(dni);
     if (!customer || !customer.id) {
-      throw new HttpException('Customer not found', HttpStatus.CONFLICT);
+      throw new HttpException('Cliente no encontrado', HttpStatus.CONFLICT);
     }
     return customer.balance;
   }
@@ -53,11 +53,11 @@ export class CustomerService {
   async login(loginDto: LoginDto): Promise<any> {
     const customer = await this.findCustomerByDni(loginDto.dni);
     if (!customer || !customer.id) {
-      throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Cliente no encontrado', HttpStatus.NOT_FOUND);
     }
     const passwordMatch = await this.authService.comparePasswords(loginDto.password, customer.password);
     if(!passwordMatch) {
-      throw new HttpException('These credentials do not match our records', HttpStatus.NOT_FOUND);
+      throw new HttpException('Las credenciales no coinciden', HttpStatus.NOT_FOUND);
     }
     const payload = { username: customer.email };
     return {

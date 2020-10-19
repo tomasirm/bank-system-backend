@@ -24,9 +24,9 @@ export class TransactionService {
       await this.saveTransaction(transactionDto.customerDto.dni, transactionDto.transactionType, transactionDto.amount, 'WITHDRAW', transactionDto.dniDestiny);
       await this.saveTransaction(transactionDto.dniDestiny, 'TRANSFERENCIA_DE_TERCEROS', transactionDto.amount, 'DEPOSIT', transactionDto.customerDto.dni);
     }else{
-      throw new HttpException('Transaction type not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Tipo de transacción no encontrada', HttpStatus.NOT_FOUND);
     }
-    return { message: 'Succesful transaction' };
+    return { message: 'Transacción exitosa' };
 
   }
 
@@ -34,16 +34,16 @@ export class TransactionService {
     const customer = await this.customerService.findCustomerByDni(dni);
 
     if (!customer || !customer.id) {
-      throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Cliente no encontrado', HttpStatus.NOT_FOUND);
     }
     const transactionType = await this.transactionTypesService.findTransactionType(transactionTypeStr);
     if (!transactionType || !transactionType.id) {
-      throw new HttpException('Transaction type not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Tipo de transacción no encontrada', HttpStatus.NOT_FOUND);
     }
     const transaction = new TransactionEntity();
     if (balanceType === 'WITHDRAW') {
       if ((customer.balance - amount) < 0) {
-        throw new HttpException('Client doesnt have enough funds', HttpStatus.CONFLICT);
+        throw new HttpException('Client no tiene saldo suficiente', HttpStatus.CONFLICT);
       }
       transaction.historicalBalance = customer.balance - amount;
       customer.balance -= amount;
