@@ -5,7 +5,7 @@ import { Exclude } from 'class-transformer';
 export class LoginDto{
   @ApiModelProperty({ required: true })
   @IsString()
-  email: string;
+  dni: string;
 
   @ApiModelProperty({ required: true })
   @IsString()

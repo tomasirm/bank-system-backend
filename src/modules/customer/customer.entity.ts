@@ -12,7 +12,7 @@ export class CustomerEntity extends GenericEntity{
   surnames: string;
   @Column({ type: 'varchar', length: 50, nullable: true })
   email: string;
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'varchar', length: 150, nullable: true })
   password: string;
   @Column({ type: 'int',  default:0 })
   balance: number;

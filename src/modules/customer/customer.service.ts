@@ -3,10 +3,13 @@ import { CustomerDto } from './customer.dto';
 import { CustomerEntity } from './customer.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Transaction } from 'typeorm';
+import { AuthService } from '../auth/auth.service';
+import { LoginDto } from '../auth/login.dto';
 
 @Injectable()
 export class CustomerService {
-  constructor( @InjectRepository(CustomerEntity) private readonly customerEntityRepository: Repository<CustomerEntity>) {
+  constructor( @InjectRepository(CustomerEntity) private readonly customerEntityRepository: Repository<CustomerEntity>,
+               private readonly authService: AuthService) {
   }
 
 
@@ -15,6 +18,9 @@ export class CustomerService {
     if (customer && customer.id) {
       throw new HttpException('Customer already exists', HttpStatus.CONFLICT);
     }
+    customer = new CustomerEntity();
+
+    customerDto.password = await this.authService.hashPassword(customerDto.password);
     customer = await this.customerEntityRepository.save(CustomerDto.from(customerDto).toEntity());
     return CustomerDto.fromEntity(customer);
   }
@@ -22,11 +28,6 @@ export class CustomerService {
   public async getAllCustomers(): Promise<CustomerDto[]> {
     return await this.customerEntityRepository.find()
       .then(customers => customers.map(customer => CustomerDto.fromEntity(customer)));
-  }
-
-
-  public async findCustomerByEmailAndPass(email: string, password: string){
-    return  await this.customerEntityRepository.findOne({email: email, password: password});
   }
 
   public async findCustomerByDni(dni: string): Promise<CustomerEntity>{
@@ -41,20 +42,30 @@ export class CustomerService {
     return CustomerDto.from(customer);
   }
 
-  public async getCustomerByEmailAndPass(email: string, password: string): Promise<CustomerDto>{
-    const customer = await this.findCustomerByEmailAndPass(email, password);
-    if (!customer || !customer.id) {
-      throw new HttpException('These credentials do not match our records', HttpStatus.NOT_FOUND);
-    }
-    return CustomerDto.from(customer);
-  }
-
   public async getBalance(dni: string){
     const customer = await this.findCustomerByDni(dni);
     if (!customer || !customer.id) {
       throw new HttpException('Customer not found', HttpStatus.CONFLICT);
     }
     return customer.balance;
+  }
+
+  async login(loginDto: LoginDto): Promise<any> {
+    const customer = await this.findCustomerByDni(loginDto.dni);
+    if (!customer || !customer.id) {
+      throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
+    }
+    const passwordMatch = await this.authService.comparePasswords(loginDto.password, customer.password);
+    if(!passwordMatch) {
+      throw new HttpException('These credentials do not match our records', HttpStatus.NOT_FOUND);
+    }
+    const payload = { username: customer.email };
+    return {
+      customerDto: customer,
+      access_token: this.authService.generateJWT(payload),
+    };
+
+
   }
 
 
